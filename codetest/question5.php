@@ -4,7 +4,7 @@ function find_addends($n, $m, $returnAll = true)
 {
 	
 	// First copy the $set of numberstest
-	// To preserve the origonal keys 
+	// To preserve the origonal keys test
 	// If we just wanted values this would be much easier. Or if they keys were assoc
 	$list=$n;
 	
