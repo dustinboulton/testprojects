@@ -169,10 +169,8 @@ class Suitability_Score {
 						//There will only be one - but quick way to get other customer and SS
 						foreach($assignments[$product] as $compareCustomer => $compareSS)
 						{
-							//echo "$compareCustomer/$compareSS $product=$ss$customer<br/>";
 							if ($compareSS < $ss && !array_key_exists($customer,$assignments[$product])) 
 							{
-								
 								// Remove assigned product
 								unset($assignments[$product]);
 								
@@ -181,7 +179,6 @@ class Suitability_Score {
 								
 								// Take the replaced customer and set of scores to rerun through assign method
 								$replay[$compareCustomer] = $this->calculatedResults[$compareCustomer];
-								//$replay[$compareCustomer] = $scores[$customer];
 								
 								// Remove this product from the replaced customer to avoid processing again
 								unset($replay[$compareCustomer][$product]);
@@ -208,7 +205,6 @@ class Suitability_Score {
 		else {
 			$this->matches =$assignments;
 		}
-		//echo $countofReplaced;
 	}
 }
 
