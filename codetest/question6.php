@@ -63,7 +63,6 @@ class Suitability_Score {
 	public $matches		= array();
 	public $scores		= array();
 	static $vowels		= array('a','e','i','o','u');
-	public $countofREplaced =0;
 	
 	
 	/**
