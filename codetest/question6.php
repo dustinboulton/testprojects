@@ -37,7 +37,7 @@ class Suitability_Score {
 	 */
 	private function setCustomerValues($input)
 	{
-		$customers = explode("\r\n",$input);
+		$customers = explode("\n",$input);
 		$returnArray = array();
 		
 		foreach($customers as $key => $value) {
@@ -52,7 +52,7 @@ class Suitability_Score {
 	}
 	
 	private function setProductValues($input){
-		$products = explode("\r\n",$input);
+		$products = explode("\n",$input);
 		$returnArray = array();
 		foreach( $products as $key => $product) {
 			$returnArray[$product]['length']	= strlen($product);
