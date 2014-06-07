@@ -227,13 +227,14 @@ class Suitability_Score {
 	
 	if (php_sapi_name() === 'cli') 
 	{
-		print_r($currentMatch->ssMatches);
+		print_r($currentMatch->matches);
 	} 
 	else {
 ?>
 	<pre><h2>SS Match Results</h1>
-	<?php print_r($currentMatch->matches);
-	echo count($currentMatch->matches);?>
+	<?php 
+	print_r($currentMatch->matches);
+	?>
 	</pre>
 <?php } ?>
 	<pre>
