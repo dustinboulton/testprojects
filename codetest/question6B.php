@@ -1,5 +1,5 @@
 <pre><?php 
-
+error_reporting(E_ALL &~E_NOTICE);
 /**
  * Attempt to solve SS Coding problem / Question #6
  * 
@@ -84,16 +84,14 @@ class Suitability_Score {
 	{
 		
 		// Take input files, explide and flip them so we are working with the names vs keys
-		$customers 	= array_flip(explode(DELIMITER, $customers));
-		$products	= array_flip(explode(DELIMITER,$products));
-		//echo count($products);
+		$customers 	= explode(DELIMITER, $customers);
+		$products	= explode(DELIMITER,$products);
 		$scores = array();
-		
 		// Loop through customers - then products
-		foreach ($customers as $customer =>$oldKey)
+		foreach ($customers as $ckey =>$customer)
 		{
 			// loop through products 
-			foreach ($products as $product => $oldKey)
+			foreach ($products as $pkey => $product)
 			{
 				
 				$cStrLen	= strlen($customer); // Customer len
@@ -126,110 +124,130 @@ class Suitability_Score {
 				}
 			
 				// Complile all scores for all customer and product combos
-				$scores[$customer][$product]=$ss;
-				//arsort($scores[$customer]);
+				$scores[$ckey][$pkey]=$ss;
 			}
-			// sorts scores so we can match faster based on highest number
-			arsort($scores[$customer]);
 		}
 
 	// Just for example link 
 	$this->calculatedResults=$scores;
 	
 	// Now assing products to customer's based on SS score
-	$this->assign($scores);
-		
+	$ss =$this->assign($scores);
+	foreach ($ss as $ckey => $pkey) {
+		$results[$customers[$ckey]][$products[key($pkey)]] = $ss[$ckey][key($pkey)];
 	}
+	$this->matches =$results;
 	
-	/**
-	 *  Loops through all complied scores and find best match based on SS 
-	 * 
-	 *  One product per customers 
-	 *  Looking for the higest possible score per match
-	 *  
-	 *  @Todo:
-	 *     - develop or find a better algorithm (http://www.hungarianalgorithm.com/solve.php) perhaps
-	 *     - Or refactor to have less loops and be more absctract  
-	 * 	
-	 */
-	private function assign($scores,&$assignments=array(),$countofReplaced=0)
-	{
-		$replay	= array();
-		foreach ($scores as $customer =>$products)
-		{
-			foreach ($products as $product =>$ss)
-			{
-				
-				// Calculate the max SS for current customer
-				$customerMax = max($scores[$customer]);
-				//echo "$customer = $customerMax = $ss = $product<br/>";
-				
-				if ($ss == $customerMax) 
-				{
-					// If the product does not already have an assignment
-					if (!array_key_exists($product,$assignments))
-					{
-						$assignments[$product][$customer]=$ss;
-					} 
-					else {
-					// Otherwise, let's find it.	
-						
-						//There will only be one - but quick way to get other customer and SS
-						foreach($assignments[$product] as $compareCustomer => $compareSS)
-						{
-							if ($compareSS < $ss && !array_key_exists($customer,$assignments[$product])) 
-							{
-								// Remove assigned product
-								unset($assignments[$product]);
-								
-								// Assign new customer to this product
-								$assignments[$product][$customer]=$ss;
-								
-								// Take the replaced customer and set of scores to rerun through assign method
-								$replay[$compareCustomer] = $this->calculatedResults[$compareCustomer];
-								
-								// Remove this product from the replaced customer to avoid processing again
-								//unset($replay[$compareCustomer][$product]);
-							} 
-							elseif ( array_key_exists($customer,$assignments[$product])) 
-							{
-								echo "Made it here";
-									
-									// Remove assigned product
-								unset($assignments[$product]);
-								
-								// Assign new customer to this product
-								$assignments[$product][$customer]=$ss;
-								
-								// Take the replaced customer and set of scores to rerun through assign method
-								$replay[$compareCustomer] = $this->calculatedResults[$compareCustomer];
-								
-							}
-							else {
-								
-								// Not a good match so replay this customer minus current product and break loop
-								$replay[$customer] = $scores[$customer];
-								unset($replay[$customer][$product]);
-							}
-					  	}
-					}
-				// Minimize the loops by breaking loop when we find the Max for customer 
-				break;
-				} 
-			}
-		} 
-		
-		// If we had to shuffle anyone let's process those again now, passing $replay as $scores
-		if (count($replay)) 
-		{
-			$this->assign($replay,$assignments,$countofReplaced);
-		} 
-		else {
-			$this->matches =$assignments;
+	}
+
+	private function assign($table) {
+	$m = $this->pad_table($table);
+	$max = $this->multimax($m);
+	$numRows = count($m);
+	$numCols = count($m[0]);
+
+	// augment for maximize
+	for ($i = 0; $i < $numRows; $i++) {
+		for ($j = 0; $j < $numCols; $j++) {
+			$m[$i][$j] = $max - $m[$i][$j];
 		}
 	}
+	$bignum = 100000; // arbitrarily big number
+	$u = array_pad(array(), $numRows, 0);
+	$v = array_pad(array(), $numCols, 0);
+	$ind = array_pad(array(), $numCols, -1);
+	for ($i = 0; $i < $numRows; $i++) {
+		$links = array_pad(array(), $numCols, -1);
+		$mins = array_pad(array(), $numCols, $bignum);
+		$visited = array_pad(array(), $numCols, 0);
+		$markedI = $i;
+		$markedJ = -1;
+		$j = 0;
+		$done = false;
+		while (!$done) {
+			$j = -1;
+			for ($k = 0; $k < $numRows; $k++) {
+				if ($visited[$k] == 0) {
+					$cur = $m[$markedI][$k] - $u[$markedI] - $v[$k];
+					if ($cur < $mins[$k]) {
+						$mins[$k] = $cur;
+						$links[$k] = $markedJ;
+					}
+					if ($j == -1 || $mins[$k] < $mins[$j]) {
+						$j = $k;
+					}
+				}
+			}
+			$delta = $mins[$j];
+			for ($k = 0; $k < $numCols; $k++) {
+				if ($visited[$k] == 1) {
+					$u[$ind[$k]] += $delta;
+					$v[$k] -= $delta;
+				} else {
+					$mins[$k] -= $delta;
+				}
+			}
+			$u[$i] += $delta;
+			$visited[$j] = 1;
+			$markedJ = $j;
+			$markedI = $ind[$j];
+			if ($markedI == -1) {
+				$done = true;
+			}
+		}
+		$done = false;
+		while (!$done) {
+			if ($links[$j] != -1) {
+				$ind[$j] = $ind[$links[$j]];
+				$j = $links[$j];
+			} else {
+				$done = true;
+			}
+		}
+		$ind[$j] = $i;
+	}
+	$ss = 0;
+	$sum=0;
+	for ($j = 0; $j < $numCols; $j++) {
+		// uncomment to see matrix coordinates
+ 		$mySS[$ind[$j]][$j]=$table[$ind[$j]][$j];
+		$sum+=$table[$ind[$j]][$j];
+		$ss += $table[$ind[$j]][$j];
+	}
+	echo "Total SS: " .$sum;
+	//print_r($mySS);
+	return $mySS;
 }
 
+// pad matrix if not square
+function pad_table($table) {
+	$m = $table;
+	$numRows = count($m);
+	$numCols = count($m[0]);
+	if ($numRows > $numCols) { // if tall
+		for ($i = 0; $i < $numRows; $i++) {
+			$m[$i] = array_pad($m[$i], $numRows, 0);
+		}
+	} elseif ($numCols > $numRows) { // if wide
+		for ($i = count($m); $i < $numCols; $i++) {
+			$m[$i] = array_pad(array(), $numCols, 0);
+		}
+	}
+	return $m;
+}
+
+// returns maximum value in multidimensional array
+function multimax($table) {
+	$numRows = count($table);
+	$max = array();
+	for ($i = 0; $i < $numRows; $i++) {
+		$max[$i] = max($table[$i]);
+	}
+	$max = max($max); // max value in entire array
+	return $max;
+}
+	
+}
 
 /* 
  * Procedural Block and some HTML 
@@ -269,14 +287,14 @@ class Suitability_Score {
 <?php } ?>
 	<pre>
 	<h2>Products Input</h1>
-<?php print_r($products);
+<?php //print_r($products);
 	echo count($products);?>
 	</pre>
 	<pre><h2>Customer Input</h1>
-<?php print_r($customers);?>
+<?php //print_r($customers);?>
 	</pre>
 	<pre><h2>All Calc Data before results</h1>
-<?php print_r($currentMatch->calculatedResults);?>
+<?php //print_r($currentMatch->calculatedResults);?>
 	</pre>
 	
 
