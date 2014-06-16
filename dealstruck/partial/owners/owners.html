@@ -1,0 +1,64 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h3 class="panel-title">About the Owners</h3>
+	</div>
+	<div class="panel-body">
+		
+		<form name="ownersForm" ng-submit="save()">
+			<div ng-repeat="owner in company.owners | orderBy:owner.name" class="row">
+
+				<h1 class="bg-info">{{owner.name}}</h1>
+				<div class="col-sm-6 col-xs-12">
+					<div class="row form-group">
+						<label class="col-xs-4" for="companyname">Name</label>
+						<div class="col-xs-8">
+							<input type="text" ng-model="owner.name" name="name" id="name_{{owner.id}}" class="form-control" required/>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 col-xs-12">	
+					<div class="row form-group">
+						<label class="col-xs-4" for="industry">Phone</label>
+						<div class="col-xs-8">
+							<input type="text" ng-model="owner.phone" name="phone" id="phone_{{owner.id}}" class="form-control" required/>			
+						</div>
+					</div>
+				</div>	
+
+				<div class="col-sm-6 col-xs-12">
+					<div class="row form-group">
+						<label class="col-xs-4" for="companyname">Email</label>
+						<div class="col-xs-8">
+							<input type="email" ng-model="owner.email" name="name" id="name_{{owner.id}}" class="form-control" required/>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6 col-xs-12">	
+					<div class="row form-group">
+						<label class="col-xs-4" for="industry">Title</label>
+						<div class="col-xs-8">
+							<input type="text" ng-model="owner.title" name="title" id="phone_{{owner.id}}" class="form-control" required/>			
+						</div>
+					</div>
+				</div>	
+
+			</div>	
+
+			<!-- Success directive -->
+			<success></success>
+
+			<button type="submit" class="btn btn-success pull-right">Save</button>
+			<button class="btn btn-primary" ng-click="addNewOwner()">Add New Team Member</button>
+
+		</form>
+	</div>
+</div>
+<div class="panel panel-warning">
+	<div class="panel-heading">
+		<h3 class="panel-title">Debug Model</h3>
+	</div>
+	<div class="panel-body">
+		<pre>{{ company | json }}</pre>
+	</div>
+</div>
+

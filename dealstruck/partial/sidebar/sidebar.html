@@ -1,0 +1,72 @@
+<!-- / NOTE: Title in mock didn't make sense but maybe I am missing something? -->
+<div id="sidebar">
+<h2>Credit line configuration</h2>
+
+<section id="tasks">
+	<p>Fill out sections to get your loan offer</p> 
+	<!--/ TODO: This is an ugly hack for now until we can come back and add a directive or format link with CSS -->
+	<div ng-repeat="(shref,display) in steps | orderBy:steps" class="input-group">
+		<span  class="input-group-addon">
+			<input type="checkbox">
+		</span>
+		
+		<a ui-sref="{{shref}}">
+			<input type="text" ng-click="{{shref}}" value="{{display}}" class="form-control" class="hidden">
+		</a>
+	</div>
+
+</section>
+
+<!-- / OFFER SECTION TODO: Link up with a Offer Model - Offer should change based on best results of ?? TBD -->
+
+<section id="offer">
+	<p class="bg-primary">{{offer.name}} Terms</p>
+	<div class="padded">
+		<h1 class="text-center">$0 - 75,000</h1>
+		<h2 class="text-center">70% - 90%</h2>
+		<form role="form">
+			<div class="form-group">
+			<textarea class="form-control" ng-model="offer.disclaimer" ng-minlength='2'></textarea>
+			</div>
+		</form>
+
+		<button type="button" class="btn btn-default">Help</button>
+		<button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#myModal">Details</button>
+	</div>
+</section>
+
+<!-- / ESTIMATE TODO: Progress bar needs to link up with Task progress -->
+<section id="estimate">
+	<div class="progress">
+		<span class="text-left">Estimate</span>
+		<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+			<span><strong>Get this loan</strong></span>
+		</div>
+		<span class="text-right">Offer</span>
+	</div>
+
+
+</section>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">{{offer.name}}</h4>
+      </div>
+      <div class="modal-body">
+        {{offer.disclaimer}}
+		<br/>
+        {{offer.terms}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Skip</button>
+        <button type="button" class="btn btn-primary">Apply for this Offer</button>
+      </div>
+    </div>
+  </div>
+</div>
+

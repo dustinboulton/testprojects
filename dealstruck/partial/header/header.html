@@ -1,0 +1,32 @@
+<!--Standard BootStrap Nav and brand as a good starting point -->
+<nav class="navbar-inverse navbar" role="navigation">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Menu</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">
+				<img class="logo" src="https://business.dealstruck.com/static/img/white_logo_small.png" alt="dealstruck"/>
+			</a>
+		</div>
+
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#">Support</a></li>
+				<li class='ng-show' ng-hide="{{isLoggedIn}}"><a ui-sref="deals">Log In</a></li>
+				<li class="dropdown ng-hide" ng-show="{{isLoggedIn}}">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Signed in as {{username}}  <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="#">Edit Settings</a></li>
+						<li class="divider"></li>
+						<li><a href="#">Logout</a></li>
+					</ul>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+

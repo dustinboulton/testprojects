@@ -1,0 +1,129 @@
+	
+<div class="mainWrapper" class="col-xs-12" >
+
+	<div ui-view="main" id="main" class="col-lg-8 col-sm-8 col-xs-12">
+		
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Basic Company Information</h3>
+			</div>
+			<div class="panel-body">
+
+
+				<form name="companyForm" ng-submit="save()">
+
+					<div class="row">
+						<div class="col-sm-6 col-xs-12">
+							<div class="row form-group">
+								<label class="col-xs-4" for="companyname">Company Name</label>
+								<div class="col-xs-8">
+									<input type="text" ng-model="company.name" name="companyname" id="companyname" class="form-control" value="Some company name here" required/>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 col-xs-12">	
+							<div class="row form-group">
+								<label class="col-xs-4" for="industry">Industry</label>
+								<div class="col-xs-8">
+
+									<select ng-model="company.industry"  class="form-control" required ng-options="value for value in industrySelect | orderBy: value"><option value="">--Industry--</option></select>
+								</div>
+							</div>
+						</div>	
+
+					</div>	
+
+					<div class="row">
+						<div class="col-sm-6 col-xs-12">
+							<div class="row form-group">
+								<label class="col-xs-4" for="ein">EIN</label>
+								<div class="col-xs-8">
+									<input type="text" ng-model="company.ein"  name="ein" id="ein" class="form-control" value="" placeholder="Enter your EIN" required/>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 col-xs-12">	
+							<div class="row form-group">
+								<label class="col-xs-4" for="sector">Sector</label>
+								<div class="col-xs-8">
+									<select ng-model="company.sector"  class="form-control" required ng-options="value for value in sectorSelect | orderBy: value"><option value="">--Sector--</option></select>
+
+								</div>
+							</div>
+						</div>	
+
+					</div>	
+					<div class="row">
+						<div class="col-sm-6 col-xs-12">
+							<div class="row form-group">
+								<label class="col-xs-4" for="owner">Owner(s)
+									<button ng-click="addNewOwner()">+</button>
+								</label>
+								<div class="col-xs-8">
+									<div ng-repeat="owner in company.owners">
+										<input type="text" ng-model="owner.name"  name="owner" id="owner" class="form-control" value="" placeholder="Add full name of owner" required/>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-6 col-xs-12">	
+							<div class="row form-group">
+								<label class="col-xs-4" for="sector">Years in Business</label>
+								<div class="col-xs-8">
+									<select ng-model="company.years"  class="form-control" required ng-options="value for value in yearsSelect | orderBy: value">
+										<option value="">--Years--</option>
+									</select>
+
+								</div>
+							</div>
+							<div class="row form-group">
+								<label class="col-xs-4" for="sector">Net Montly Revenue</label>
+								<div class="col-xs-8">
+									<select ng-model="company.revenue.monthly"  class="form-control" required ng-options="value for value in revenueMonthlySelect | orderBy: value">
+										<option value="">-- Net Montly Revenue--</option>
+									</select>
+
+								</div>
+							</div>
+						</div>	
+
+					</div>
+					
+					<!-- Success directive -->
+					<success></success>
+
+					<button type="submit" class="btn btn-success pull-right" >Save</button>
+				</div>
+			</div>
+		</form>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Key Factors</h3>
+			</div>
+			<div class="panel-body">
+				<!-- // add rows for positive and negative factors -->
+				+ 1
+
+
+			</div>
+		</div>
+
+
+		<div class="panel panel-warning">
+			<div class="panel-heading">
+				<h3 class="panel-title">Debug Model</h3>
+			</div>
+			<div class="panel-body">
+				<pre>{{ company | json }}</pre>
+			</div>
+		</div>
+		
+
+
+
+	</div>
+	<div class="sidebarWrapper col-lg-4 col-sm-4 col-xs-12" ng-controller="SidebarCtrl" ng-include="'partial/sidebar/sidebar.html'"></div>
+
+
+	
+</div>
